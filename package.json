@@ -1,0 +1,76 @@
+{
+  "name": "business-app-angular",
+  "version": "0.1.0",
+  "engines": {
+    "node": "20 || 22"
+  },
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "dev:teamsfx": "concurrently \"npm run dev-tab:teamsfx\" \"npm run dev-api:teamsfx\"",
+    "dev-tab:teamsfx": "env-cmd --silent -f .localConfigs npm run start",
+    "dev-api:teamsfx": "cd api && npm run dev:teamsfx",
+    "prettier": "prettier --no-error-on-unmatched-pattern --write --config ./.prettierrc --ignore-path=../.prettierignore \"**/*.js\" \"**/*.ts\" \"**/*.html\" \"**/*.css\" \"**/*.scss\"",
+    "prettier:check": "prettier --no-error-on-unmatched-pattern --check --config ./.prettierrc --ignore-path=./.prettierignore \"**/*.js\" \"**/*.ts\" \"**/*.html\" \"**/*.css\" \"**/*.scss\"",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix"
+  },
+  "dependencies": {
+    "@angular/animations": "^17.0.0",
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@angular/platform-browser-dynamic": "^17.0.0",
+    "@angular/router": "^17.0.0",
+    "@microsoft/teams-js": "^2.20.0",
+    "@microsoft/teamsfx": "^3.0.2",
+    "@azure/communication-common": "^2.3.1",
+
+    "@azure/communication-chat": "^1.5.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.0.0",
+    "@angular/cli": "^17.0.0",
+    "@angular/compiler-cli": "^17.0.0",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "concurrently": "^9.1.0",
+    "env-cmd": "^10.1.0",
+    "typescript": "~5.2.2",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "2.3.1",
+    "pretty-quick": "^3.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "@typescript-eslint/recommended"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "homepage": ".",
+      "proxy": "https://[::1]:8080"
+}
