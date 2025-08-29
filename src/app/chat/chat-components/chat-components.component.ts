@@ -16,23 +16,21 @@ export interface ChatMessageItem {
   selector: 'app-chat-components',
   template: `
     <div class="chat-components-container" [ngClass]="{ 'dark-mode': isDarkMode }">
-      <div class="message-container">
-        <div class="chat-messages">
-          <div class="message-list">
-            <div *ngIf="isLoading" class="loading-messages">
-              <div class="loading-spinner"></div>
-              <div>Loading messages...</div>
-            </div>
-            <div *ngIf="!isLoading && messages.length === 0" class="no-messages">
-              <div class="no-messages-icon">💬</div>
-              <div>No messages yet. Start the conversation!</div>
-            </div>
-            <div *ngFor="let message of messages" class="message-item" [ngClass]="{ 'own-message': message.sender === userId }">
-              <div class="message-content">
-                <div class="message-sender">{{ message.senderDisplayName || 'Unknown' }}</div>
-                <div class="message-text" [innerHTML]="message.content"></div>
-                <div class="message-time">{{ formatMessageTime(message.createdOn) }}</div>
-              </div>
+      <div class="chat-messages">
+        <div class="message-list">
+          <div *ngIf="isLoading" class="loading-messages">
+            <div class="loading-spinner"></div>
+            <div>Loading messages...</div>
+          </div>
+          <div *ngIf="!isLoading && messages.length === 0" class="no-messages">
+            <div class="no-messages-icon">💬</div>
+            <div>No messages yet. Start the conversation!</div>
+          </div>
+          <div *ngFor="let message of messages" class="message-item" [ngClass]="{ 'own-message': message.sender === userId }">
+            <div class="message-content">
+              <div class="message-sender">{{ message.senderDisplayName || 'Unknown' }}</div>
+              <div class="message-text" [innerHTML]="message.content"></div>
+              <div class="message-time">{{ formatMessageTime(message.createdOn) }}</div>
             </div>
           </div>
         </div>
@@ -62,10 +60,9 @@ export interface ChatMessageItem {
     .chat-components-container {
       display: flex;
       flex-direction: column;
-      height: 100%;
+      height: 100vh;
       background-color: #ffffff;
       min-height: 400px;
-      position: relative;
       overflow: hidden;
     }
     
@@ -74,17 +71,8 @@ export interface ChatMessageItem {
       color: #ffffff;
     }
 
-    .message-container {
-      position: absolute;
-      top: 0;
-      bottom: 80px; /* Height of chat input */
-      left: 0;
-      right: 0;
-      overflow: hidden;
-    }
-    
     .chat-messages {
-      height: 100%;
+      flex: 1;
       overflow-y: auto;
       padding: 16px;
       display: flex;
@@ -96,7 +84,7 @@ export interface ChatMessageItem {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      flex: 1;
+      min-height: min-content;
     }
     
     .loading-messages, .no-messages {
@@ -195,14 +183,11 @@ export interface ChatMessageItem {
       padding: 16px;
       border-top: 1px solid #e1dfdd;
       background-color: #ffffff;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
       height: 80px;
       display: flex;
       align-items: center;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+      flex-shrink: 0;
     }
     
     .dark-mode .chat-input {
