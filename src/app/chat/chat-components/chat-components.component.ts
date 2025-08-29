@@ -301,7 +301,7 @@ export interface ChatMessageItem {
     @media (max-width: 768px) {
       .chat-messages {
         padding: 12px;
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 160px);
       }
       
       .message-content {
