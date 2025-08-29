@@ -64,6 +64,7 @@ export interface ChatMessageItem {
       background-color: #ffffff;
       min-height: 400px;
       max-height: 100vh;
+      position: relative;
       overflow: hidden;
     }
     
@@ -73,13 +74,14 @@ export interface ChatMessageItem {
     }
     
     .chat-messages {
-      flex: 1;
+      flex: 1 1 auto;
       overflow-y: auto;
       padding: 16px;
-      min-height: 200px;
-      max-height: calc(100vh - 120px); /* Reserve space for header and input */
+      min-height: 0;
+      height: calc(100% - 80px); /* Subtract chat input height */
       display: flex;
       flex-direction: column;
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
     
     .message-list {
@@ -190,14 +192,18 @@ export interface ChatMessageItem {
       left: 0;
       right: 0;
       z-index: 10;
+      height: 80px;
       min-height: 80px;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
     }
     
     .dark-mode .chat-input {
       background-color: #1b1a19;
       border-top-color: #3b3a39;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
     }
     
     .input-container {
