@@ -362,23 +362,36 @@ export interface ChatMessageItem {
       }
     }
     
-    /* Ensure input is always visible on small screens */
-    @media (max-height: 600px) {
+    /* Ensure input is always visible on all screen sizes */
+    @media screen {
       .chat-messages {
-        max-height: calc(100vh - 160px);
+        max-height: calc(100vh - 120px); /* Adjust for header and input */
+        height: auto;
+        min-height: 100px;
       }
       
       .chat-input {
-        position: sticky;
+        position: fixed;
         bottom: 0;
+        left: 0;
+        right: 0;
         background-color: #ffffff;
         border-top: 1px solid #e1dfdd;
+        z-index: 100;
+        width: 100%;
+        padding: 12px 16px;
       }
       
       .dark-mode .chat-input {
         background-color: #1b1a19;
         border-top-color: #3b3a39;
       }
+      
+      /* Add padding to prevent content from being hidden behind the fixed input */
+      .chat-components-container {
+        padding-bottom: 80px;
+      }
+    }
     }
   `]
 })
