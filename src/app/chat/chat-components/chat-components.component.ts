@@ -392,7 +392,6 @@ export interface ChatMessageItem {
         padding-bottom: 80px;
       }
     }
-    }
   `]
 })
 export class ChatComponentsComponent implements OnInit, OnDestroy, OnChanges {
