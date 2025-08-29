@@ -51,15 +51,34 @@ import { formatTimestampForThread } from '../../utils/datetime.utils';
   styles: [`
     .thread-list-container {
       width: 300px;
+      min-width: 250px;
+      max-width: 350px;
       border-right: 1px solid #e1dfdd;
       display: flex;
       flex-direction: column;
       background-color: #faf9f8;
+      height: 100vh;
+      overflow: hidden;
     }
     
     .thread-list-content {
       flex: 1;
       overflow-y: auto;
+      scrollbar-width: thin;
+      -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    
+    .thread-list-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .thread-list-content::-webkit-scrollbar-thumb {
+      background-color: #c8c6c4;
+      border-radius: 3px;
+    }
+    
+    .thread-list-content::-webkit-scrollbar-track {
+      background-color: transparent;
     }
     
     .assigned-to-me-label {
@@ -67,6 +86,10 @@ import { formatTimestampForThread } from '../../utils/datetime.utils';
       font-weight: 600;
       color: #605e5c;
       border-bottom: 1px solid #e1dfdd;
+      position: sticky;
+      top: 0;
+      background-color: #faf9f8;
+      z-index: 1;
     }
     
     .thread-list {
