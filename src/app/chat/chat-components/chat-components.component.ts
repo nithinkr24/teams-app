@@ -365,7 +365,7 @@ export interface ChatMessageItem {
     /* Ensure input is always visible on small screens */
     @media (max-height: 600px) {
       .chat-messages {
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 160px);
       }
       
       .chat-input {
