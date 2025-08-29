@@ -57,6 +57,19 @@ export interface ChatMessageItem {
     </div>
   `,
   styles: [`
+    /* Typography variables */
+    :host {
+      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --font-size-xs: 11px;
+      --font-size-sm: 12px;
+      --font-size-md: 14px;
+      --font-size-lg: 16px;
+      --line-height-normal: 1.5;
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+    }
+
     .chat-components-container {
       display: flex;
       flex-direction: column;
@@ -64,6 +77,11 @@ export interface ChatMessageItem {
       background-color: #ffffff;
       min-height: 400px;
       overflow: hidden;
+      font-family: var(--font-family);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-normal);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     .chat-components-container.dark-mode {
@@ -160,23 +178,28 @@ export interface ChatMessageItem {
     }
     
     .message-sender {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
       margin-bottom: 4px;
       opacity: 0.8;
+      letter-spacing: 0.1px;
     }
     
     .message-text {
+      font-size: var(--font-size-md);
       margin-bottom: 4px;
-      line-height: 1.4;
+      line-height: var(--line-height-normal);
       word-wrap: break-word;
       white-space: pre-wrap;
+      font-weight: var(--font-weight-normal);
     }
     
     .message-time {
-      font-size: 11px;
+      font-size: var(--font-size-xs);
       opacity: 0.8;
       text-align: right;
+      font-weight: var(--font-weight-normal);
+      letter-spacing: 0.1px;
     }
     
     .chat-input {
@@ -209,9 +232,12 @@ export interface ChatMessageItem {
       padding: 12px 16px;
       border: 1px solid #e1dfdd;
       border-radius: 24px;
-      font-size: 14px;
+      font-family: var(--font-family);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-normal);
+      line-height: var(--line-height-normal);
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       min-width: 0;
       max-width: 100%;
     }
@@ -224,10 +250,12 @@ export interface ChatMessageItem {
     
     .message-input:focus {
       border-color: #0078d4;
+      box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.1);
     }
     
     .dark-mode .message-input:focus {
       border-color: #106ebe;
+      box-shadow: 0 0 0 2px rgba(16, 110, 190, 0.1);
     }
     
     .message-input:disabled {
@@ -248,8 +276,11 @@ export interface ChatMessageItem {
       padding: 12px 20px;
       border-radius: 24px;
       cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.2s;
+      font-family: var(--font-family);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-medium);
+      line-height: var(--line-height-normal);
+      transition: background-color 0.2s, box-shadow 0.2s;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -264,15 +295,18 @@ export interface ChatMessageItem {
     
     .send-button:hover:not(:disabled) {
       background-color: #106ebe;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .dark-mode .send-button:hover:not(:disabled) {
       background-color: #005a9e;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
     .send-button:disabled {
       background-color: #c8c6c4;
       cursor: not-allowed;
+      opacity: 0.6;
     }
     
     .dark-mode .send-button:disabled {
@@ -280,11 +314,12 @@ export interface ChatMessageItem {
     }
     
     .send-icon {
-      font-size: 16px;
+      font-size: var(--font-size-lg);
     }
     
     .send-text {
-      font-size: 14px;
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-medium);
     }
     
     /* Responsive design */
