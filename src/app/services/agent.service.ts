@@ -59,7 +59,7 @@ export class AgentService {
   async getToken(acsUserId: string): Promise<TokenResponse> {
     try {
       const response = await firstValueFrom(this.http.post<TokenResponse>(`http://localhost:5047/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
-      return response || { token: '' };
+      return response.data || { token: '' };
     } catch (error) {
       console.error('Failed to get token:', error);
       // Fallback for development - you can remove this in production
