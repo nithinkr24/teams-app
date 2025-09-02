@@ -5,12 +5,11 @@ import { environment } from '../../environments/environment';
 import { apiEndpoints } from '../utils/constants';
 
 export interface AgentUser {
-  acsUserId: string;
-  displayName: string;
+  data: any;
 }
 
 export interface TokenResponse {
-  token: string;
+  data: any
 }
 
 @Injectable({
