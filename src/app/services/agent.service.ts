@@ -40,7 +40,7 @@ export class AgentService {
   async getEndpointUrl(): Promise<string> {
     try {
       const response = await firstValueFrom(this.http.get<{ data: any }>('http://localhost:5047/api/TeamsChat/getEndpointUrl'));
-      return response?.data?.endpointUrl || '';
+      return response?.data || '';
     } catch (error) {
       console.error('Failed to get endpoint URL:', error);
       // Fallback for development - you can remove this in production
