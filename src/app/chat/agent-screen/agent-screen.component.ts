@@ -131,7 +131,7 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
       console.log('Got Teams user info:', userInfo);
       const getSalesRepInfo = await this.agentService.getSalesRepInfo(userInfo.objectId);
       if (!getSalesRepInfo) {
-             this.errorMessage = 'Failed to get sales rep info';
+        this.errorMessage = 'Failed to get sales rep info';
         return;
       }
       const agentACSUser = await this.agentService.getAgentACSUser(userInfo.objectId);

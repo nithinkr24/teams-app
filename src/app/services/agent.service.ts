@@ -4,13 +4,6 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { apiEndpoints } from '../utils/constants';
 
-export interface AgentUser {
-  data: any;
-}
-
-export interface TokenResponse {
-  data: any
-}
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +11,10 @@ export interface TokenResponse {
 export class AgentService {
   constructor(private http: HttpClient) {}
 
-  async getSalesRepInfo(teamsUserId: string): Promise<AgentUser | undefined> {
+  async getSalesRepInfo(teamsUserId: string): Promise<any | undefined> {
     try {
       const response = await firstValueFrom(
-        this.http.post<AgentUser>(
+        this.http.post<any>(
           `http://localhost:5047/api/TeamsChat/getSalesRepInfo`,
           { aadObjectId: teamsUserId }
         )
@@ -33,10 +26,10 @@ export class AgentService {
     }
   }
 
-  async getAgentACSUser(teamsUserId: string): Promise<AgentUser | undefined> {
+  async getAgentACSUser(teamsUserId: string): Promise<any | undefined> {
     try {
-      const response = await firstValueFrom(this.http.get<AgentUser>(`http://localhost:5047/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
-      return response?.data;
+      const response = await firstValueFrom(this.http.get<any>(`http://localhost:5047/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
+      return response.data;
     } catch (error) {
       console.error('Failed to get ACS user:', error);
       // Fallback for development - you can remove this in production
@@ -55,10 +48,10 @@ export class AgentService {
     }
   }
 
-  async getToken(acsUserId: string): Promise<TokenResponse> {
+  async getToken(acsUserId: string): Promise<any> {
     try {
-      const response = await firstValueFrom(this.http.post<TokenResponse>(`http://localhost:5047/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
-      return response?.data || { token: '' };
+      const response = await firstValueFrom(this.http.post<any>(`http://localhost:5047/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
+      return response.data || { token: '' };
     } catch (error) {
       console.error('Failed to get token:', error);
       // Fallback for development - you can remove this in production
