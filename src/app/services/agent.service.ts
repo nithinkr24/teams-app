@@ -37,7 +37,7 @@ export class AgentService {
   async getAgentACSUser(teamsUserId: string): Promise<AgentUser | undefined> {
     try {
       const response = await firstValueFrom(this.http.get<AgentUser>(`http://localhost:5047/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
-      return response;
+      return response.data;
     } catch (error) {
       console.error('Failed to get ACS user:', error);
       // Fallback for development - you can remove this in production
