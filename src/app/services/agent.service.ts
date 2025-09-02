@@ -19,9 +19,24 @@ export interface TokenResponse {
 export class AgentService {
   constructor(private http: HttpClient) {}
 
+  async getSalesRepInfo(teamsUserId: string): Promise<AgentUser | undefined> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<AgentUser>(
+          `http://localhost:5047/api/TeamsChat/getSalesRepInfo`,
+          { aadObjectId: teamsUserId }
+        )
+      );
+      return response;
+    } catch (error) {
+      console.error('Failed to get teams sales Rep Information:', error);
+      return undefined;
+    }
+  }
+
   async getAgentACSUser(teamsUserId: string): Promise<AgentUser | undefined> {
     try {
-      const response = await firstValueFrom(this.http.get<AgentUser>(`http://localhost:8080/agentACSUser/?teamsUserId=${teamsUserId}`));
+      const response = await firstValueFrom(this.http.get<AgentUser>(`http://localhost:5047/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
       return response;
     } catch (error) {
       console.error('Failed to get ACS user:', error);
@@ -32,7 +47,7 @@ export class AgentService {
 
   async getEndpointUrl(): Promise<string> {
     try {
-      const response = await firstValueFrom(this.http.get<{ endpointUrl: string }>('http://localhost:8080/getEndpointUrl'));
+      const response = await firstValueFrom(this.http.get<{ endpointUrl: string }>('http://localhost:5047/api/TeamsChat/getEndpointUrl'));
       return response?.endpointUrl || '';
     } catch (error) {
       console.error('Failed to get endpoint URL:', error);
@@ -43,7 +58,7 @@ export class AgentService {
 
   async getToken(acsUserId: string): Promise<TokenResponse> {
     try {
-      const response = await firstValueFrom(this.http.post<TokenResponse>(`http://localhost:8080/token/user/${acsUserId}?scope=chat`, {}));
+      const response = await firstValueFrom(this.http.post<TokenResponse>(`http://localhost:5047/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
       return response || { token: '' };
     } catch (error) {
       console.error('Failed to get token:', error);
@@ -51,4 +66,5 @@ export class AgentService {
       return { token: 'mock-token' };
     }
   }
+  
 }
