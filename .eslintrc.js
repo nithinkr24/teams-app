@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
 module.exports = {
   env: {
     browser: true,
@@ -27,7 +24,7 @@ module.exports = {
       }
     ],
     eqeqeq: 'warn',
-    'header/header': ['error', 'line', ' Copyright (c) Microsoft Corporation.\n Licensed under the MIT License.'],
+    'header/header': ['error', 'line'],
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
     curly: 'error'

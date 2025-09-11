@@ -53,7 +53,6 @@ export class ThreadsService {
   private addChatClientListeners(userId: string): void {
     if (!this.chatClient) return;
 
-    // Listen for participants added
     this.chatClient.on('participantsAdded', async (event) => {
       const participantsAdded = event.participantsAdded;
       const isCurrentUserAdded = participantsAdded.some((participant) => {
