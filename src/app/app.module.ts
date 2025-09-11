@@ -17,12 +17,10 @@ import { LoadingSpinnerComponent } from './chat/loading-spinner/loading-spinner.
 import { ErrorScreenComponent } from './chat/error-screen/error-screen.component';
 import { ToastNotificationComponent } from './chat/toast-notification/toast-notification.component';
 import { PrivacyComponent } from './privacy/privacy.component';
-import { TermsOfUseComponent } from './terms-of-use/terms-of-use.component';
 import { TeamsExampleComponent } from './teams-example/teams-example.component';
 
 const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
-  { path: 'termsofuse', component: TermsOfUseComponent },
   { path: 'tab', component: TabComponent },
   { path: 'teams-example', component: TeamsExampleComponent },
   { path: '', redirectTo: '/tab', pathMatch: 'full' }
@@ -42,7 +40,6 @@ const routes: Routes = [
     ErrorScreenComponent,
     ToastNotificationComponent,
     PrivacyComponent,
-    TermsOfUseComponent,
     TeamsExampleComponent
   ],
   imports: [
