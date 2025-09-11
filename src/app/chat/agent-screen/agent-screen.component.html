@@ -1,0 +1,24 @@
+<div>
+    <div *ngIf="errorMessage" class="error-container">
+        <app-error-screen [errorMessage]="errorMessage"></app-error-screen>
+    </div>
+
+    <div *ngIf="!errorMessage" class="agent-screen-container">
+        <app-toast-notification *ngIf="resolvedThreadId" [toasterId]="resolvedThreadId" [showToast]="!!resolvedThreadId"
+            [toastBodyMessage]="resolvedThreadCustomerDisplayName || ''" (onViewThread)="handleOnViewThread($event)">
+        </app-toast-notification>
+
+        <app-thread-list [selectedThreadId]="selectedThreadId" [threads]="threads"
+            [isLoading]="!endpointUrl || isLoading" [tabs]="tabs" [selectedTab]="selectedTab"
+            (onThreadSelected)="setSelectedThreadId($event)" (onStatusTabSelected)="handleOnStatusTabSelected($event)">
+        </app-thread-list>
+
+        <div class="chat-container">
+            <app-chat-screen *ngIf="selectedThreadId && token && endpointUrl && userId && displayName" [token]="token"
+                [userId]="userId" [displayName]="displayName" [endpointUrl]="endpointUrl" [threadId]="selectedThreadId"
+                [receiverName]="getReceiverName()" [threadStatus]="getThreadStatus()"
+                (onResolveChat)="handleOnResolveChat($event)">
+            </app-chat-screen>
+        </div>
+    </div>
+</div>

@@ -6,84 +6,8 @@ import { AgentService } from '../../services/agent.service';
 
 @Component({
   selector: 'app-agent-screen',
-  template: `
-    <div>
-      <div *ngIf="errorMessage" class="error-container">
-        <app-error-screen [errorMessage]="errorMessage"></app-error-screen>
-      </div>
-      
-      <div *ngIf="!errorMessage" class="agent-screen-container">
-        <app-toast-notification
-          *ngIf="resolvedThreadId"
-          [toasterId]="resolvedThreadId"
-          [showToast]="!!resolvedThreadId"
-          [toastBodyMessage]="resolvedThreadCustomerDisplayName || ''"
-          (onViewThread)="handleOnViewThread($event)">
-        </app-toast-notification>
-        
-        <app-thread-list
-          [selectedThreadId]="selectedThreadId"
-          [threads]="threads"
-          [isLoading]="!endpointUrl || isLoading"
-          [tabs]="tabs"
-          [selectedTab]="selectedTab"
-          (onThreadSelected)="setSelectedThreadId($event)"
-          (onStatusTabSelected)="handleOnStatusTabSelected($event)">
-        </app-thread-list>
-        
-        <div class="chat-container">
-          <app-chat-screen
-            *ngIf="selectedThreadId && token && endpointUrl && userId && displayName"
-            [token]="token"
-            [userId]="userId"
-            [displayName]="displayName"
-            [endpointUrl]="endpointUrl"
-            [threadId]="selectedThreadId"
-            [receiverName]="getReceiverName()"
-            [threadStatus]="getThreadStatus()"
-            (onResolveChat)="handleOnResolveChat($event)">
-          </app-chat-screen>
-        </div>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .agent-screen-container {
-      display: flex;
-      height: 100vh;
-      min-height: 500px;
-      max-height: 100vh;
-      overflow: hidden;
-    }
-    
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      overflow: hidden;
-    }
-    
-    .error-container {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .agent-screen-container {
-        min-height: 400px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .agent-screen-container {
-        min-height: 300px;
-      }
-    }
-  `]
+  templateUrl: 'agent-screen.component.html',
+  styleUrl: 'agent-screen.component.css'
 })
 export class AgentScreenComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -120,15 +44,12 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
 
   private async initializeScreen() {
     try {
-      console.log('Initializing agent screen...');
-      
       const userInfo = await this.teamsFxService.getUserInfo();
       if (!userInfo) {
         this.errorMessage = 'Failed to get Teams user info';
         return;
       }
       
-      console.log('Got Teams user info:', userInfo);
       const getSalesRepInfo = await this.agentService.getSalesRepInfo(userInfo.objectId);
       if (!getSalesRepInfo) {
         this.errorMessage = 'Failed to get sales rep info';
@@ -139,9 +60,6 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
         this.errorMessage = 'Failed to link to ACS user';
         return;
       }
-      
-      console.log('Got agent ACS user:', agentACSUser);
-
       this.endpointUrl = await this.agentService.getEndpointUrl();
       const tokenResponse = await this.agentService.getToken(agentACSUser.acsUserId);
       this.token = tokenResponse.token;
