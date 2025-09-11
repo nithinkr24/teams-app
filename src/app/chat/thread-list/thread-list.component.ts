@@ -1,17 +1,17 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { ThreadItem, ThreadItemStatus } from '../../services/threads.service';
+import { Subject } from 'rxjs';
+import { ThreadItem } from '../../services/threads.service';
 import { formatTimestampForThread } from '../../utils/datetime.utils';
 
 @Component({
   selector: 'app-thread-list',
   template: `
     <div class="thread-list-container">
-      // <app-thread-list-header
-      //   [tabs]="tabs"
-      //   [selectedTab]="selectedTab"
-      //   (onTabSelect)="handleOnStatusTabSelected($event)">
-      // </app-thread-list-header>
+      <app-thread-list-header
+        [tabs]="tabs"
+        [selectedTab]="selectedTab"
+        (onTabSelect)="handleOnStatusTabSelected($event)">
+      </app-thread-list-header>
       
       <div class="thread-list-content">
         <ng-container *ngIf="!isLoading; else loadingTemplate">
