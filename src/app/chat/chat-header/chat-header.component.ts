@@ -2,28 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-chat-header',
-  template: `
-    <div class="chat-header">
-      <div class="header-content">
-        <div class="persona-info">
-          <div class="avatar">{{ personaName.charAt(0).toUpperCase() }}</div>
-          <div class="persona-details">
-            <div class="persona-name">{{ personaName }}</div>
-            <div class="thread-status" [ngClass]="getStatusClass()">
-              {{ getStatusText() }}
-            </div>
-          </div>
-        </div>
-        
-        <button 
-          *ngIf="threadStatus === 'active'"
-          class="resolve-button"
-          (click)="handleResolveChat()">
-          Resolve
-        </button>
-      </div>
-    </div>
-  `,
+  templateUrl: 'chat-header.html',
   styles: [`
     .chat-header {
       padding: 16px;
