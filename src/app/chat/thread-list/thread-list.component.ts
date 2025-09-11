@@ -5,49 +5,7 @@ import { formatTimestampForThread } from '../../utils/datetime.utils';
 
 @Component({
   selector: 'app-thread-list',
-  template: `
-    <div class="thread-list-container">
-      <app-thread-list-header
-        [tabs]="tabs"
-        [selectedTab]="selectedTab"
-        (onTabSelect)="handleOnStatusTabSelected($event)">
-      </app-thread-list-header>
-      
-      <div class="thread-list-content">
-        <ng-container *ngIf="!isLoading; else loadingTemplate">
-          <ng-container *ngIf="getCurrentStatusThreads().length > 0; else noThreadsTemplate">
-            <div class="assigned-to-me-label">Assigned to me</div>
-            <div class="thread-list">
-              <div
-                *ngFor="let thread of getCurrentStatusThreads()"
-                class="thread-item"
-                [ngClass]="getThreadItemContainerStyle(thread.id)"
-                (click)="handleOnThreadSelected(thread.id)">
-                
-                <div class="thread-item-content">
-                  <div class="persona">
-                    <div class="avatar">{{ thread.topic.charAt(0).toUpperCase() }}</div>
-                    <div class="persona-name">{{ thread.topic }}</div>
-                  </div>
-                  <div class="timestamp">
-                    {{ formatTimestampForThread(thread.lastMessageReceivedOn, currentDate) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-    
-    <ng-template #loadingTemplate>
-      <app-loading-spinner></app-loading-spinner>
-    </ng-template>
-    
-    <ng-template #noThreadsTemplate>
-      <div class="no-threads-label">No threads</div>
-    </ng-template>
-  `,
+  template: 'thread-list.html',
   styles: [`
     .thread-list-container {
       width: 300px;
