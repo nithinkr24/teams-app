@@ -5,7 +5,7 @@ import { formatTimestampForThread } from '../../utils/datetime.utils';
 
 @Component({
   selector: 'app-thread-list',
-  template: 'thread-list.html',
+  templateUrl: './thread-list.html',
   styles: [`
     .thread-list-container {
       width: 300px;
