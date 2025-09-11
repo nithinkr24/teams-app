@@ -44,7 +44,6 @@ export class TeamsFxService {
       return {
         objectId: context.user.id,
         displayName: context.user.displayName,
-        // email: context.user.email
       };
     } catch (error) {
       console.error('Failed to get user info:', error);

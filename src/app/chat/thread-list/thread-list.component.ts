@@ -7,11 +7,11 @@ import { formatTimestampForThread } from '../../utils/datetime.utils';
   selector: 'app-thread-list',
   template: `
     <div class="thread-list-container">
-      <app-thread-list-header
-        [tabs]="tabs"
-        [selectedTab]="selectedTab"
-        (onTabSelect)="handleOnStatusTabSelected($event)">
-      </app-thread-list-header>
+      // <app-thread-list-header
+      //   [tabs]="tabs"
+      //   [selectedTab]="selectedTab"
+      //   (onTabSelect)="handleOnStatusTabSelected($event)">
+      // </app-thread-list-header>
       
       <div class="thread-list-content">
         <ng-container *ngIf="!isLoading; else loadingTemplate">
