@@ -60,7 +60,8 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
         this.errorMessage = 'Failed to link to ACS user';
         return;
       }
-      this.endpointUrl = await this.agentService.getEndpointUrl();
+      // this.endpointUrl = await this.agentService.getEndpointUrl();
+      this.endpointUrl = 'https://teamspocbot.unitedstates.communication.azure.com';
       const tokenResponse = await this.agentService.getToken(agentACSUser.acsUserId);
       this.token = tokenResponse.token;
       this.userId = agentACSUser.acsUserId;
