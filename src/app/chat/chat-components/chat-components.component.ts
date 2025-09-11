@@ -14,7 +14,7 @@ export interface ChatMessageItem {
 
 @Component({
   selector: 'app-chat-components',
-  templateUrl: './chat.components.html',
+  templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
 export class ChatComponentsComponent implements OnInit, OnDestroy, OnChanges {
