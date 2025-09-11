@@ -16,11 +16,9 @@ import { ChatComponentsComponent } from './chat/chat-components/chat-components.
 import { LoadingSpinnerComponent } from './chat/loading-spinner/loading-spinner.component';
 import { ErrorScreenComponent } from './chat/error-screen/error-screen.component';
 import { ToastNotificationComponent } from './chat/toast-notification/toast-notification.component';
-import { PrivacyComponent } from './privacy/privacy.component';
 import { TeamsExampleComponent } from './teams-example/teams-example.component';
 
 const routes: Routes = [
-  { path: 'privacy', component: PrivacyComponent },
   { path: 'tab', component: TabComponent },
   { path: 'teams-example', component: TeamsExampleComponent },
   { path: '', redirectTo: '/tab', pathMatch: 'full' }
@@ -39,7 +37,6 @@ const routes: Routes = [
     LoadingSpinnerComponent,
     ErrorScreenComponent,
     ToastNotificationComponent,
-    PrivacyComponent,
     TeamsExampleComponent
   ],
   imports: [
