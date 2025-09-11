@@ -1,0 +1,32 @@
+<div class="chat-components-container" [ngClass]="{ 'dark-mode': isDarkMode }">
+    <div class="chat-messages">
+        <div class="message-list">
+            <div *ngIf="isLoading" class="loading-messages">
+                <div class="loading-spinner"></div>
+                <div>Loading messages...</div>
+            </div>
+            <div *ngIf="!isLoading && messages.length === 0" class="no-messages">
+                <div class="no-messages-icon">💬</div>
+                <div>No messages yet. Start the conversation!</div>
+            </div>
+            <div *ngFor="let message of messages" class="message-item"
+                [ngClass]="{ 'own-message': message.sender === userId }">
+                <div class="message-content">
+                    <div class="message-sender">{{ message.senderDisplayName || 'Unknown' }}</div>
+                    <div class="message-text" [innerHTML]="message.content"></div>
+                    <div class="message-time">{{ formatMessageTime(message.createdOn) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-input">
+        <div class="input-container">
+            <input type="text" placeholder="Type a message..." class="message-input" [(ngModel)]="messageText"
+                (keyup.enter)="sendMessage()" [disabled]="!canSendMessage">
+            <button class="send-button" [disabled]="!canSendMessage || !messageText.trim()" (click)="sendMessage()">
+                <span class="send-text">Send</span>
+            </button>
+        </div>
+    </div>
+</div>
