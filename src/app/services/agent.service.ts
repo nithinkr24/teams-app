@@ -43,8 +43,7 @@ export class AgentService {
       return response?.data || '';
     } catch (error) {
       console.error('Failed to get endpoint URL:', error);
-      // Fallback for development - you can remove this in production
-      return 'https://mock-endpoint.communication.azure.com/';
+      return '';
     }
   }
 
