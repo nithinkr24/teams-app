@@ -15,7 +15,7 @@ export class AgentService {
     try {
       const response = await firstValueFrom(
         this.http.post<any>(
-          `http://localhost:5047/api/TeamsChat/getSalesRepInfo`,
+          `https://10.0.0.6/app/service/api/TeamsChat/getSalesRepInfo`,
           { aadObjectId: teamsUserId }
         )
       );
@@ -28,7 +28,7 @@ export class AgentService {
 
   async getAgentACSUser(teamsUserId: string): Promise<any | undefined> {
     try {
-      const response = await firstValueFrom(this.http.get<any>(`http://localhost:5047/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
+      const response = await firstValueFrom(this.http.get<any>(`https://10.0.0.6/app/service/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
       return response.data;
     } catch (error) {
       console.error('Failed to get ACS user:', error);
@@ -39,7 +39,7 @@ export class AgentService {
 
   async getEndpointUrl(): Promise<string> {
     try {
-      const response = await firstValueFrom(this.http.get<{ data: any }>('http://localhost:5047/api/TeamsChat/getEndpointUrl'));
+      const response = await firstValueFrom(this.http.get<{ data: any }>('https://10.0.0.6/app/service/api/TeamsChat/getEndpointUrl'));
       return response?.data || '';
     } catch (error) {
       console.error('Failed to get endpoint URL:', error);
@@ -50,7 +50,7 @@ export class AgentService {
 
   async getToken(acsUserId: string): Promise<any> {
     try {
-      const response = await firstValueFrom(this.http.post<any>(`http://localhost:5047/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
+      const response = await firstValueFrom(this.http.post<any>(`https://10.0.0.6/app/service/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
       return response.data || { token: '' };
     } catch (error) {
       console.error('Failed to get token:', error);
