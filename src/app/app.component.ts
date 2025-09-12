@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { app } from '@microsoft/teams-js';
+import { CommonService } from './services/common.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,12 @@ import { app } from '@microsoft/teams-js';
   `]
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private commonService: CommonService
+  ) {
+      this.commonService.removeCookie('RedirectURL');
+  }
 
   ngOnInit() {
     this.initializeTeams();

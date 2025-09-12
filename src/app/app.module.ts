@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { LoadingSpinnerComponent } from './chat/loading-spinner/loading-spinner.
 import { ErrorScreenComponent } from './chat/error-screen/error-screen.component';
 import { ToastNotificationComponent } from './chat/toast-notification/toast-notification.component';
 import { TeamsExampleComponent } from './teams-example/teams-example.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 const routes: Routes = [
   { path: 'tab', component: TabComponent },
@@ -47,7 +48,13 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
