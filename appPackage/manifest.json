@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "id": "${{TEAMS_APP_ID}}",
     "developer": {
-        "name": "Woodgrove App, Inc.",
+        "name": "Expeed Software Pvt Ltd",
         "websiteUrl": "https://github.com/Azure-Samples/communication-services-messaging-teams-app?tab=readme-ov-file#b2c-customer-agent-messaging-teams-app",
         "privacyUrl": "${{TAB_ENDPOINT}}/index.html#/privacy",
         "termsOfUseUrl": "${{TAB_ENDPOINT}}/index.html#/termsofuse"
