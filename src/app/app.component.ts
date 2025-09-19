@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { app } from '@microsoft/teams-js';
 import { CommonService } from './services/common.service';
 
@@ -17,9 +16,9 @@ import { CommonService } from './services/common.service';
     }
   `]
 })
+
 export class AppComponent implements OnInit {
   constructor(
-    private router: Router,
     private commonService: CommonService
   ) {
     this.commonService.removeCookie('RedirectURL');
@@ -27,15 +26,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.initializeTeams();
-
-    window.addEventListener('storage', (event: StorageEvent) => {
-      if (event.key === 'allCookies' && event.newValue) {
-
-         const allCookies = JSON.parse(event.newValue);
-        
-        this.handleAuthentication(allCookies);
-      }
-    });
   }
 
   private async initializeTeams() {
@@ -46,21 +36,4 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private handleAuthentication(allCookies: any) {
-     for (const key in allCookies) {
-      if (Object.prototype.hasOwnProperty.call(allCookies, key)) {
-        document.cookie = `${key}=${allCookies[key]}; path=/; Secure; SameSite=Lax` ;
-      }
-    }
-    // document.cookie = `AuthToken=${token}; path=/; Secure; SameSite=Lax`;
-
-    console.log('Cookie has been set successfully.');
-
-    // Clear localStorage
-    localStorage.removeItem('allCookies');
-    console.log('Local storage value has been cleared.');
-
-    // Re-initialize Teams app if needed
-    this.initializeTeams();
-  }
 }

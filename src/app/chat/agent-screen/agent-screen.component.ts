@@ -67,14 +67,6 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
       this.userId = agentACSUser.acsUserId;
       this.displayName = agentACSUser.displayName;
       
-      console.log('Initialized with:', {
-        endpointUrl: this.endpointUrl,
-        token: this.token ? '***' : 'missing',
-        userId: this.userId,
-        displayName: this.displayName
-      });
-
-      // Initialize the chat client with the obtained credentials
       await this.threadsService.initializeChatClient(this.userId, this.token, this.endpointUrl);
     } catch (error) {
       console.error('Failed to set screen state due to error: ', error);
@@ -85,7 +77,6 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
   // Method to refresh threads manually
   async refreshThreads() {
     try {
-      console.log('Manually refreshing threads');
       await this.threadsService.refreshThreads();
     } catch (error) {
       console.error('Failed to refresh threads:', error);
@@ -126,13 +117,11 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(threads => {
         this.threads = threads;
-        console.log('Threads loaded:', threads);
       });
 
     this.threadsService.selectedThreadId$
       .pipe(takeUntil(this.destroy$))
       .subscribe(threadId => {
-        console.log('Selected thread ID changed to:', threadId);
         this.selectedThreadId = threadId;
       });
 

@@ -16,12 +16,12 @@ import { ChatComponentsComponent } from './chat/chat-components/chat-components.
 import { LoadingSpinnerComponent } from './chat/loading-spinner/loading-spinner.component';
 import { ErrorScreenComponent } from './chat/error-screen/error-screen.component';
 import { ToastNotificationComponent } from './chat/toast-notification/toast-notification.component';
-import { TeamsExampleComponent } from './teams-example/teams-example.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { TeamsAuthEndComponent } from './components/teams-auth-end.component';
 
 const routes: Routes = [
   { path: 'tab', component: TabComponent },
-  { path: 'teams-example', component: TeamsExampleComponent },
+  { path: 'teams-auth-end', component: TeamsAuthEndComponent },
   { path: '', redirectTo: '/tab', pathMatch: 'full' }
 ];
 
@@ -38,7 +38,7 @@ const routes: Routes = [
     LoadingSpinnerComponent,
     ErrorScreenComponent,
     ToastNotificationComponent,
-    TeamsExampleComponent
+    TeamsAuthEndComponent
   ],
   imports: [
     BrowserModule,

@@ -153,7 +153,6 @@ export class ThreadListComponent implements OnInit, OnDestroy {
   }
   
   handleOnThreadSelected(threadId: string): void {
-    console.log('Thread selected in ThreadListComponent:', threadId);
     this.onThreadSelected.emit(threadId);
   }
   

@@ -167,11 +167,8 @@ export class ThreadsService {
     if (!this.selectedThreadIdSubject.value && threads.length > 0) {
       const firstActiveThread = threads.find(thread => thread.status === ThreadItemStatus.ACTIVE);
       if (firstActiveThread) {
-        console.log('Auto-selecting first active thread:', firstActiveThread.id);
         this.setSelectedThreadId(firstActiveThread.id);
       } else {
-        // If no active threads, select the first thread regardless of status
-        console.log('No active threads found, selecting first thread:', threads[0].id);
         this.setSelectedThreadId(threads[0].id);
       }
     }
@@ -220,7 +217,6 @@ export class ThreadsService {
       if (status === ThreadItemStatus.RESOLVED && this.selectedThreadIdSubject.value === threadId) {
         const nextActiveThreadId = getNextActiveThreadId(updatedThreads, threadId);
         if (nextActiveThreadId) {
-          console.log('Auto-selecting next active thread after resolve:', nextActiveThreadId);
           this.setSelectedThreadId(nextActiveThreadId);
         }
       }
@@ -247,7 +243,6 @@ export class ThreadsService {
       const finalThreads = [updatedThread, ...remainingThreads];
       this.threadsSubject.next(finalThreads);
       
-      console.log(`Thread ${threadId} moved to top due to new message`);
     }
   }
 
@@ -256,7 +251,6 @@ export class ThreadsService {
     const threadIndex = currentThreads.findIndex(thread => thread.id === threadId);
     
     if (threadIndex !== -1 && currentThreads[threadIndex].status === ThreadItemStatus.RESOLVED) {
-      console.log(`Reactivating resolved thread ${threadId} due to new message`);
       
       // Update status to active
       const updatedThreads = [...currentThreads];
@@ -290,7 +284,6 @@ export class ThreadsService {
       }
     }
     
-    console.log('Setting selected thread ID:', threadId);
     this.selectedThreadIdSubject.next(threadId);
   }
 
@@ -304,19 +297,15 @@ export class ThreadsService {
 
   // Method to manually refresh threads
   async refreshThreads(): Promise<void> {
-    console.log('Manually refreshing threads');
     if (this.chatClient) {
       await this.fetchThreads();
     } else {
-      console.log('No chat client available for refresh');
     }
   }
 
   // Method to update thread status (used when resolving chat)
   async updateThreadStatusExternal(threadId: string, status: ThreadItemStatus): Promise<void> {
     try {
-      console.log(`Updating thread ${threadId} status to ${status} via backend`);
-      
       // Update backend first
       if (status === ThreadItemStatus.RESOLVED) {
         await this.agentWorkItemService.updateAgentWorkItem(threadId, status);
@@ -327,7 +316,6 @@ export class ThreadsService {
       // Then update local state
       this.updateThreadStatus(threadId, status);
       
-      console.log(`Thread ${threadId} status updated successfully to ${status}`);
     } catch (error) {
       console.error(`Failed to update thread ${threadId} status:`, error);
       throw error;

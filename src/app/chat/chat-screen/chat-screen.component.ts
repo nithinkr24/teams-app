@@ -87,20 +87,16 @@ export class ChatScreenComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
   
   ngOnInit() {
-    console.log('ChatScreen initialized with threadId:', this.threadId);
     this.initializeChat();
     this.subscribeToTheme();
   }
   
   ngOnChanges(changes: SimpleChanges) {
-    console.log('ChatScreen inputs changed:', changes);
     
     if (changes['threadId'] && !changes['threadId'].firstChange) {
-      console.log('Thread ID changed from', changes['threadId'].previousValue, 'to', changes['threadId'].currentValue);
     }
     
     if (changes['token'] || changes['userId'] || changes['endpointUrl'] || changes['threadId']) {
-      console.log('Critical inputs changed, reinitializing chat');
       this.initializeChat();
     }
   }
@@ -116,13 +112,6 @@ export class ChatScreenComponent implements OnInit, OnDestroy, OnChanges {
   
   private async initializeChat() {
     try {
-      console.log('Initializing chat screen with:', {
-        threadId: this.threadId,
-        userId: this.userId,
-        hasToken: !!this.token,
-        hasEndpointUrl: !!this.endpointUrl
-      });
-      
       // Disable pull down to refresh
       document.body.style.overflow = 'hidden';
       
@@ -142,15 +131,9 @@ export class ChatScreenComponent implements OnInit, OnDestroy, OnChanges {
         this.isDarkMode = context.themeString === 'dark';
       });
   }
-  
+
   async handleOnResolveChat() {
     try {
-      console.log('Resolve chat requested for thread:', this.threadId);
-      
-      // Update the chat thread metadata to notify the CustomerApp that the chat has been resolved
-      // Note: This functionality is now handled by the ChatComponents component
-      console.log('Resolve chat requested for thread:', this.threadId);
-      
       await this.agentWorkItemService.updateAgentWorkItem(
         this.threadId, 
         ThreadItemStatus.RESOLVED

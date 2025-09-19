@@ -2,46 +2,39 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, from } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { CommonService } from '../services/common.service';
 import { TeamsAuthService } from '../services/teams-auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private isAuthenticating = false;
+  private token = '';
 
   constructor(
-    private commonService: CommonService,
     private teamsAuthService: TeamsAuthService
   ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
+    let authReq = this.addAuthHeaders(request);
+
+    return next.handle(authReq).pipe( 
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 && !this.isAuthenticating) {
+        if (error.status === 401 && !this.token) {
           return this.handleUnauthorized(request, next);
         }
-        
         return throwError(() => error);
       })
     );
   }
 
   private handleUnauthorized(originalRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.isAuthenticating) {
+    if (this.token) {
       return throwError(() => new Error('Authentication already in progress'));
     }
 
-    this.isAuthenticating = true;
-
     return from(this.teamsAuthService.openLoginDialog()).pipe(
-      switchMap((loginSuccess) => {
-        this.isAuthenticating = false;
-        
-        if (loginSuccess) {
-          console.log('Login successful, retrying original request');
-          
+      switchMap((tokenValue) => {
+        this.token = tokenValue;
+        if (this.token) {
           const retryRequest = this.addAuthHeaders(originalRequest);
-          
           return next.handle(retryRequest);
         } else {
           console.error('Login failed or was cancelled');
@@ -49,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       }),
       catchError((error) => {
-        this.isAuthenticating = false;
+        this.token = ''; 
         return throwError(() => error);
       })
     );
@@ -57,10 +50,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private addAuthHeaders(request: HttpRequest<any>): HttpRequest<any> {
     const authHeaders: { [key: string]: string } = {};
-
-    const token = this.commonService.getCookie('jenn-auth');
-    if (token) {
-      authHeaders['Authorization'] = `Bearer ${token}`;
+    if (this.token) {
+      authHeaders['token'] = `${this.token}`; // Note: a 'token' header is non-standard. The standard is 'Authorization' with 'Bearer'.
     }
 
     if (Object.keys(authHeaders).length > 0) {
@@ -71,5 +62,4 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return request;
   }
-
 }
