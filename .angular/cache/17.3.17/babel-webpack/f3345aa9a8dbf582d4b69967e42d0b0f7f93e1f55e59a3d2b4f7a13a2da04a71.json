@@ -1,0 +1,1 @@
+{"ast":null,"code":"var o = {\n  randomUUID: \"undefined\" != typeof crypto && crypto.randomUUID && crypto.randomUUID.bind(crypto)\n};\nexport { o as default };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

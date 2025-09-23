@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { ChatClient, ChatMessageReceivedEvent, ChatThreadItem } from '@azure/communication-chat';
+import { ChatClient, ChatMessageReceivedEvent, ChatThreadCreatedEvent, ChatThreadItem } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, CommunicationUserKind } from '@azure/communication-common';
 import { AgentWorkItemService, AgentWorkItem } from './agent-work-item.service';
 import { getNextActiveThreadId } from '../utils/threadsUtils';
@@ -44,7 +44,7 @@ export class ThreadsService {
       this.addChatClientListeners(userId);
       
       // Fetch initial threads
-      await this.fetchThreads();
+      await this.fetchThreads(true);
     } catch (error) {
       console.error('Failed to initialize chat client:', error);
     }
@@ -53,42 +53,46 @@ export class ThreadsService {
   private addChatClientListeners(userId: string): void {
     if (!this.chatClient) return;
 
-    this.chatClient.on('participantsAdded', async (event) => {
-      const participantsAdded = event.participantsAdded;
-      const isCurrentUserAdded = participantsAdded.some((participant) => {
-        const participantId = participant.id as CommunicationUserKind;
-        return participantId.communicationUserId === userId;
-      });
+    // this.chatClient.on('participantsAdded', async (event) => {
+    //   const participantsAdded = event.participantsAdded;
+    //   const isCurrentUserAdded = participantsAdded.some((participant) => {
+    //     const participantId = participant.id as CommunicationUserKind;
+    //     return participantId.communicationUserId === userId;
+    //   });
 
-      if (isCurrentUserAdded) {
-        try {
-          const topic = (await this.chatClient!.getChatThreadClient(event.threadId).getProperties()).topic;
-          const threadItem: ThreadItem = {
-            id: event.threadId,
-            topic: topic,
-            lastMessageReceivedOn: new Date(),
-            status: ThreadItemStatus.ACTIVE
-          };
+    //   if (isCurrentUserAdded) {
+    //     try {
+    //       const topic = (await this.chatClient!.getChatThreadClient(event.threadId).getProperties()).topic;
+    //       const threadItem: ThreadItem = {
+    //         id: event.threadId,
+    //         topic: topic,
+    //         lastMessageReceivedOn: new Date(),
+    //         status: ThreadItemStatus.ACTIVE
+    //       };
 
-          this.addNewThread(threadItem);
-        } catch (error) {
-          console.error('Failed to get thread properties:', error);
-        }
-      }
-    });
+    //       this.addNewThread(threadItem);
+    //     } catch (error) {
+    //       console.error('Failed to get thread properties:', error);
+    //     }
+    //   }
+    // });
 
     // Listen for participants removed
-    this.chatClient.on('participantsRemoved', async (event) => {
-      const threadId = event.threadId;
-      this.updateThreadStatus(threadId, ThreadItemStatus.RESOLVED);
+    // this.chatClient.on('participantsRemoved', async (event) => {
+    //   const threadId = event.threadId;
+    //   this.updateThreadStatus(threadId, ThreadItemStatus.RESOLVED);
       
-      // Auto-select next active thread if current thread is resolved
-      if (this.selectedThreadIdSubject.value === threadId) {
-        const nextActiveThreadId = getNextActiveThreadId(this.threadsSubject.value, threadId);
-        this.setSelectedThreadId(nextActiveThreadId);
-      }
+    //   // Auto-select next active thread if current thread is resolved
+    //   if (this.selectedThreadIdSubject.value === threadId) {
+    //     const nextActiveThreadId = getNextActiveThreadId(this.threadsSubject.value, threadId);
+    //     this.setSelectedThreadId(nextActiveThreadId);
+    //   }
       
-      this.setResolvedThreadId(threadId);
+    //   this.setResolvedThreadId(threadId);
+    // });
+
+    this.chatClient.on('chatThreadCreated', (event: ChatThreadCreatedEvent) => {
+      this.fetchThreads(false);
     });
 
     // Listen for new messages
@@ -107,14 +111,13 @@ export class ThreadsService {
   }
   
   private emitMessageReceived(threadId: string, event: ChatMessageReceivedEvent): void {
-    // Create a custom event for message updates
     const messageUpdateEvent = new CustomEvent('messageReceived', {
       detail: { threadId, event }
     });
     window.dispatchEvent(messageUpdateEvent);
   }
 
-  private async fetchThreads(): Promise<void> {
+  private async fetchThreads(init: boolean): Promise<void> {
     if (!this.chatClient) return;
 
     try {
@@ -128,24 +131,27 @@ export class ThreadsService {
         topic: thread.topic,
         lastMessageReceivedOn: thread.lastMessageReceivedOn
       }));
+      for (const thread of threadItems) {
+        thread.status = ThreadItemStatus.ACTIVE
+      }
 
       // Get agent work items to determine thread status
-      const agentWorkItems = await this.agentWorkItemService.getAgentWorkItems();
+      // const agentWorkItems = await this.agentWorkItemService.getAgentWorkItems();
 
-      for (const thread of threadItems) {
-        const agentWorkItem = agentWorkItems.find((item: AgentWorkItem) => item.id === thread.id);
-        if (!agentWorkItem) {
-          try {
-            await this.agentWorkItemService.createAgentWorkItem(thread.id, ThreadItemStatus.ACTIVE);
-            thread.status = ThreadItemStatus.ACTIVE;
-          } catch (error) {
-            console.error(`Failed to create thread status work item for thread ${thread.id}:`, error);
-            thread.status = ThreadItemStatus.ACTIVE; // Default to active
-          }
-        } else {
-          thread.status = agentWorkItem.status;
-        }
-      }
+      // for (const thread of threadItems) {
+      //   const agentWorkItem = agentWorkItems.find((item: AgentWorkItem) => item.id === thread.id);
+      //   if (!agentWorkItem) {
+      //     try {
+      //       await this.agentWorkItemService.createAgentWorkItem(thread.id, ThreadItemStatus.ACTIVE);
+      //       thread.status = ThreadItemStatus.ACTIVE;
+      //     } catch (error) {
+      //       console.error(`Failed to create thread status work item for thread ${thread.id}:`, error);
+      //       thread.status = ThreadItemStatus.ACTIVE; // Default to active
+      //     }
+      //   } else {
+      //     thread.status = agentWorkItem.status;
+      //   }
+      // }
 
       // Sort threads by last message received time
       threadItems.sort((a, b) => 
@@ -155,7 +161,7 @@ export class ThreadsService {
       this.threadsSubject.next(threadItems);
       
       // Auto-select first active thread if no thread is selected
-      this.autoSelectFirstActiveThread(threadItems);
+       this.autoSelectFirstActiveThread(threadItems);
     } catch (error) {
       console.error('Failed to fetch threads:', error);
     } finally {
@@ -296,12 +302,12 @@ export class ThreadsService {
   }
 
   // Method to manually refresh threads
-  async refreshThreads(): Promise<void> {
-    if (this.chatClient) {
-      await this.fetchThreads();
-    } else {
-    }
-  }
+  // async refreshThreads(): Promise<void> {
+  //   if (this.chatClient) {
+  //     await this.fetchThreads();
+  //   } else {
+  //   }
+  // }
 
   // Method to update thread status (used when resolving chat)
   async updateThreadStatusExternal(threadId: string, status: ThreadItemStatus): Promise<void> {

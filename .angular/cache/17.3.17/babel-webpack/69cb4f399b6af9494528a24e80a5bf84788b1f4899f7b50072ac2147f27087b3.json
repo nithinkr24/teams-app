@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Copyright (c) Microsoft Corporation.\n// Licensed under the MIT License.\nexport const SDK_VERSION = \"1.22.0\";\nexport const DEFAULT_RETRY_POLICY_COUNT = 3;\n//# sourceMappingURL=constants.js.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Copyright (c) Microsoft Corporation.\n// Licensed under the MIT License.\nimport { createClientLogger } from \"@azure/logger\";\nexport const logger = createClientLogger(\"communication-chat\");\n//# sourceMappingURL=logger.js.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { validateSafeContent as t } from \"../internal/idValidation.js\";\nclass i {\n  constructor(i) {\n    this.idAsString = i, t(i);\n  }\n  serialize() {\n    return this.toString();\n  }\n  toString() {\n    return this.idAsString;\n  }\n}\nexport { i as ValidatedSafeString };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

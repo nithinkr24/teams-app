@@ -1,0 +1,1 @@
+{"ast":null,"code":"import t from \"./regex.js\";\nfunction e(e) {\n  return \"string\" == typeof e && t.test(e);\n}\nexport { e as default };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

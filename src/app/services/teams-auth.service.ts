@@ -28,7 +28,6 @@ export class TeamsAuthService {
     try {
       await this.initializeTeams();
       
-      this.commonService.setCookie('RedirectURL', environment.teamsAuthEndRedirect, 0);
       
       const loginUrl = new URL(environment.loginPath);
       return new Promise((resolve) => {

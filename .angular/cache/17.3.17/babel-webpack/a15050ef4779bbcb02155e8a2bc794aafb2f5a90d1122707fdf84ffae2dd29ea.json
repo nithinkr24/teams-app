@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { runtime as o } from \"./runtime.js\";\nfunction r() {\n  return o.hostVersionsInfo ? o.hostVersionsInfo.adaptiveCardSchemaVersion : void 0;\n}\nexport { r as getAdaptiveCardSchemaVersion };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

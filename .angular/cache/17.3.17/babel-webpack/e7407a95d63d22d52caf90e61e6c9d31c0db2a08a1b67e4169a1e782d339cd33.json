@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Copyright (c) Microsoft Corporation.\n// Licensed under the MIT License.\nexport { log } from \"./log.common.js\";\n//# sourceMappingURL=log-browser.mjs.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

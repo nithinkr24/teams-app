@@ -15,7 +15,7 @@ export class AgentService {
     try {
       const response = await firstValueFrom(
         this.http.post<any>(
-          `https://10.0.0.6/app/service/api/TeamsChat/getSalesRepInfo`,
+          `${environment.apiBaseUrl}TeamsChat/getSalesRepInfo`,
           { aadObjectId: teamsUserId }
         )
       );
@@ -28,18 +28,17 @@ export class AgentService {
 
   async getAgentACSUser(teamsUserId: string): Promise<any | undefined> {
     try {
-      const response = await firstValueFrom(this.http.get<any>(`https://10.0.0.6/app/service/api/TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
+      const response = await firstValueFrom(this.http.get<any>(`${environment.apiBaseUrl}TeamsChat/agentACSUser/?teamsUserId=${teamsUserId}`));
       return response.data;
     } catch (error) {
       console.error('Failed to get ACS user:', error);
-      // Fallback for development - you can remove this in production
       return undefined;
     }
   }
 
   async getEndpointUrl(): Promise<string> {
     try {
-      const response = await firstValueFrom(this.http.get<{ data: any }>('https://10.0.0.6/app/service/api/TeamsChat/getEndpointUrl'));
+      const response = await firstValueFrom(this.http.get<{ data: any }>(`${environment.apiBaseUrl}TeamsChat/getEndpointUrl`));
       return response?.data || '';
     } catch (error) {
       console.error('Failed to get endpoint URL:', error);
@@ -49,11 +48,10 @@ export class AgentService {
 
   async getToken(acsUserId: string): Promise<any> {
     try {
-      const response = await firstValueFrom(this.http.post<any>(`https://10.0.0.6/app/service/api/TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
+      const response = await firstValueFrom(this.http.post<any>(`${environment.apiBaseUrl}TeamsChat/salesAgent-token`, { SalesRepAcsUserId: acsUserId}));
       return response.data || { token: '' };
     } catch (error) {
       console.error('Failed to get token:', error);
-      // Fallback for development - you can remove this in production
       return { token: 'mock-token' };
     }
   }

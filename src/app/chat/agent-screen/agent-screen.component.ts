@@ -74,18 +74,16 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
     }
   }
   
-  // Method to refresh threads manually
-  async refreshThreads() {
-    try {
-      await this.threadsService.refreshThreads();
-    } catch (error) {
-      console.error('Failed to refresh threads:', error);
-      this.showErrorMessage('Failed to refresh threads. Please try again.');
-    }
-  }
+  // async refreshThreads() {
+  //   try {
+  //     await this.threadsService.refreshThreads();
+  //   } catch (error) {
+  //     console.error('Failed to refresh threads:', error);
+  //     this.showErrorMessage('Failed to refresh threads. Please try again.');
+  //   }
+  // }
   
   private showErrorMessage(message: string): void {
-    // Create a temporary error message display
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
