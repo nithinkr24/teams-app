@@ -183,10 +183,10 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
     const firstThreadOfSelectedTab = this.threads.find(thread => thread.status === status);
     
     if (firstThreadOfSelectedTab) {
-      console.log('Selecting first thread of status:', status, firstThreadOfSelectedTab.id);
+      console.log('Selecting first chat of status:', status, firstThreadOfSelectedTab.id);
       this.setSelectedThreadId(firstThreadOfSelectedTab.id);
     } else {
-      console.log('No threads found for status:', status);
+      console.log('No chat found for status:', status);
       this.selectedThreadId = undefined;
     }
   }

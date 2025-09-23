@@ -1,5 +1,5 @@
 export const threadStrings = {
-  noThreads: 'No threads available',
+  noThreads: 'No chat available',
   assignedToMe: 'Assigned to me',
   failToGetTeamsUserInfo: 'Failed to get Teams user info',
   failToLinkToACSUser: 'Failed to link to ACS user',

@@ -1,1 +1,0 @@
-{"ast":null,"code":"class e {}\nclass r extends e {\n  validate(e) {\n    return !0;\n  }\n  deserialize(e) {\n    return e;\n  }\n}\nexport { e as ResponseHandler, r as SimpleTypeResponseHandler };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

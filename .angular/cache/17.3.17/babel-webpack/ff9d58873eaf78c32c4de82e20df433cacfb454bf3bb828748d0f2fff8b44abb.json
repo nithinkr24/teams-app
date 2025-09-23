@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Copyright (c) Microsoft Corporation.\n// Licensed under the MIT License.\nexport { createLoggerContext } from \"./logger.js\";\n//# sourceMappingURL=internal.js.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

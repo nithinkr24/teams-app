@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { validateEmailAddress as t } from \"../internal/emailAddressValidation.js\";\nclass r {\n  constructor(r) {\n    this.val = r, t(r);\n  }\n  toString() {\n    return this.val;\n  }\n}\nexport { r as EmailAddress };","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

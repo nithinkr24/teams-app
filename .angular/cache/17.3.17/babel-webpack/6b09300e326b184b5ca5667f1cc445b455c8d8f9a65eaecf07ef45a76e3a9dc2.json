@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Copyright (c) Microsoft Corporation.\n// Licensed under the MIT License.\nexport { useInstrumenter } from \"./instrumenter.js\";\nexport { createTracingClient } from \"./tracingClient.js\";\n//# sourceMappingURL=index.js.map","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

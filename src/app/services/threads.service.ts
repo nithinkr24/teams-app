@@ -92,7 +92,7 @@ export class ThreadsService {
     // });
 
     this.chatClient.on('chatThreadCreated', (event: ChatThreadCreatedEvent) => {
-      this.fetchThreads(false);
+        this.fetchThreads(false);
     });
 
     // Listen for new messages
@@ -153,15 +153,13 @@ export class ThreadsService {
       //   }
       // }
 
-      // Sort threads by last message received time
       threadItems.sort((a, b) => 
         b.lastMessageReceivedOn.getTime() - a.lastMessageReceivedOn.getTime()
       );
 
       this.threadsSubject.next(threadItems);
       
-      // Auto-select first active thread if no thread is selected
-       this.autoSelectFirstActiveThread(threadItems);
+      init && this.autoSelectFirstActiveThread(threadItems);
     } catch (error) {
       console.error('Failed to fetch threads:', error);
     } finally {
