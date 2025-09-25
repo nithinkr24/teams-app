@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { app, authentication } from '@microsoft/teams-js';
-import { CommonService } from './common.service';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -9,7 +8,7 @@ import { environment } from '../../environments/environment';
 export class TeamsAuthService {
   private isInitialized = false;
 
-  constructor(private commonService: CommonService) {
+  constructor( ) {
     this.initializeTeams();
   }
 
@@ -36,7 +35,6 @@ export class TeamsAuthService {
           width: 500,
           height: 600,
           successCallback: (result: string) => {
-            console.log('Login dialog closed, checking authentication...');
             const response = JSON.parse(result);
             resolve(response?.jenneToken);
           },

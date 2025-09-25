@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ChatClient, ChatMessageReceivedEvent, ChatThreadCreatedEvent, ChatThreadItem } from '@azure/communication-chat';
 import { AzureCommunicationTokenCredential, CommunicationUserKind } from '@azure/communication-common';
-import { AgentWorkItemService, AgentWorkItem } from './agent-work-item.service';
+import { AgentWorkItemService } from './agent-work-item.service';
 import { getNextActiveThreadId } from '../utils/threadsUtils';
 
 export interface ThreadItem {
@@ -40,10 +40,8 @@ export class ThreadsService {
       this.chatClient = new ChatClient(endpointUrl, tokenCredential);
       await this.chatClient.startRealtimeNotifications();
       
-      // Add real-time listeners
       this.addChatClientListeners(userId);
       
-      // Fetch initial threads
       await this.fetchThreads(true);
     } catch (error) {
       console.error('Failed to initialize chat client:', error);
@@ -53,59 +51,18 @@ export class ThreadsService {
   private addChatClientListeners(userId: string): void {
     if (!this.chatClient) return;
 
-    // this.chatClient.on('participantsAdded', async (event) => {
-    //   const participantsAdded = event.participantsAdded;
-    //   const isCurrentUserAdded = participantsAdded.some((participant) => {
-    //     const participantId = participant.id as CommunicationUserKind;
-    //     return participantId.communicationUserId === userId;
-    //   });
-
-    //   if (isCurrentUserAdded) {
-    //     try {
-    //       const topic = (await this.chatClient!.getChatThreadClient(event.threadId).getProperties()).topic;
-    //       const threadItem: ThreadItem = {
-    //         id: event.threadId,
-    //         topic: topic,
-    //         lastMessageReceivedOn: new Date(),
-    //         status: ThreadItemStatus.ACTIVE
-    //       };
-
-    //       this.addNewThread(threadItem);
-    //     } catch (error) {
-    //       console.error('Failed to get thread properties:', error);
-    //     }
-    //   }
-    // });
-
-    // Listen for participants removed
-    // this.chatClient.on('participantsRemoved', async (event) => {
-    //   const threadId = event.threadId;
-    //   this.updateThreadStatus(threadId, ThreadItemStatus.RESOLVED);
-      
-    //   // Auto-select next active thread if current thread is resolved
-    //   if (this.selectedThreadIdSubject.value === threadId) {
-    //     const nextActiveThreadId = getNextActiveThreadId(this.threadsSubject.value, threadId);
-    //     this.setSelectedThreadId(nextActiveThreadId);
-    //   }
-      
-    //   this.setResolvedThreadId(threadId);
-    // });
-
     this.chatClient.on('chatThreadCreated', (event: ChatThreadCreatedEvent) => {
         this.fetchThreads(false);
     });
 
-    // Listen for new messages
     this.chatClient.on('chatMessageReceived', (event: ChatMessageReceivedEvent) => {
       const threadId = event.threadId;
       this.updateThreadLastMessage(threadId, new Date());
       
-      // Reactivate resolved thread if customer sends a message
       if ((event.sender as CommunicationUserKind).communicationUserId !== userId) {
         this.reactivateThreadIfResolved(threadId);
       }
       
-      // Emit message received event for real-time updates
       this.emitMessageReceived(threadId, event);
     });
   }
@@ -134,24 +91,6 @@ export class ThreadsService {
       for (const thread of threadItems) {
         thread.status = ThreadItemStatus.ACTIVE
       }
-
-      // Get agent work items to determine thread status
-      // const agentWorkItems = await this.agentWorkItemService.getAgentWorkItems();
-
-      // for (const thread of threadItems) {
-      //   const agentWorkItem = agentWorkItems.find((item: AgentWorkItem) => item.id === thread.id);
-      //   if (!agentWorkItem) {
-      //     try {
-      //       await this.agentWorkItemService.createAgentWorkItem(thread.id, ThreadItemStatus.ACTIVE);
-      //       thread.status = ThreadItemStatus.ACTIVE;
-      //     } catch (error) {
-      //       console.error(`Failed to create thread status work item for thread ${thread.id}:`, error);
-      //       thread.status = ThreadItemStatus.ACTIVE; // Default to active
-      //     }
-      //   } else {
-      //     thread.status = agentWorkItem.status;
-      //   }
-      // }
 
       threadItems.sort((a, b) => 
         b.lastMessageReceivedOn.getTime() - a.lastMessageReceivedOn.getTime()
@@ -183,11 +122,9 @@ export class ThreadsService {
     const existingThreadIndex = currentThreads.findIndex(thread => thread.id === threadItem.id);
     
     if (existingThreadIndex === -1) {
-      // Add new thread to the beginning of the list
       const newThreads = [threadItem, ...currentThreads];
       this.threadsSubject.next(newThreads);
       
-      // Auto-select the new thread if it's the first one
       if (newThreads.length === 1) {
         this.setSelectedThreadId(threadItem.id);
       }
@@ -202,22 +139,18 @@ export class ThreadsService {
       const updatedThreads = [...currentThreads];
       updatedThreads[threadIndex] = { ...updatedThreads[threadIndex], status };
       
-      // Move resolved threads to the end and sort by last message time
       if (status === ThreadItemStatus.RESOLVED) {
         const [resolvedThread] = updatedThreads.splice(threadIndex, 1);
         updatedThreads.push(resolvedThread);
       } else if (status === ThreadItemStatus.ACTIVE) {
-        // Move active threads to the top based on last message time
         const [activeThread] = updatedThreads.splice(threadIndex, 1);
         updatedThreads.unshift(activeThread);
       }
       
-      // Sort threads by last message received time (most recent first)
       updatedThreads.sort((a, b) => b.lastMessageReceivedOn.getTime() - a.lastMessageReceivedOn.getTime());
       
       this.threadsSubject.next(updatedThreads);
       
-      // If the resolved thread was the selected one, auto-select next active thread
       if (status === ThreadItemStatus.RESOLVED && this.selectedThreadIdSubject.value === threadId) {
         const nextActiveThreadId = getNextActiveThreadId(updatedThreads, threadId);
         if (nextActiveThreadId) {
@@ -235,15 +168,12 @@ export class ThreadsService {
       const updatedThreads = [...currentThreads];
       updatedThreads[threadIndex] = { ...updatedThreads[threadIndex], lastMessageReceivedOn };
       
-      // Move thread to the top since it has the most recent message
       const [updatedThread] = updatedThreads.splice(threadIndex, 1);
       updatedThreads.unshift(updatedThread);
       
-      // Sort remaining threads by last message time
       const remainingThreads = updatedThreads.slice(1);
       remainingThreads.sort((a, b) => b.lastMessageReceivedOn.getTime() - a.lastMessageReceivedOn.getTime());
       
-      // Combine updated thread with sorted remaining threads
       const finalThreads = [updatedThread, ...remainingThreads];
       this.threadsSubject.next(finalThreads);
       
@@ -256,22 +186,18 @@ export class ThreadsService {
     
     if (threadIndex !== -1 && currentThreads[threadIndex].status === ThreadItemStatus.RESOLVED) {
       
-      // Update status to active
       const updatedThreads = [...currentThreads];
       updatedThreads[threadIndex] = { ...updatedThreads[threadIndex], status: ThreadItemStatus.ACTIVE };
       
-      // Move to top and sort
       const [reactivatedThread] = updatedThreads.splice(threadIndex, 1);
       updatedThreads.unshift(reactivatedThread);
       
-      // Sort remaining threads
       const remainingThreads = updatedThreads.slice(1);
       remainingThreads.sort((a, b) => b.lastMessageReceivedOn.getTime() - a.lastMessageReceivedOn.getTime());
       
       const finalThreads = [reactivatedThread, ...remainingThreads];
       this.threadsSubject.next(finalThreads);
       
-      // Clear resolved thread ID if it was this thread
       if (this.resolvedThreadIdSubject.value === threadId) {
         this.setResolvedThreadId(undefined);
       }
@@ -280,7 +206,6 @@ export class ThreadsService {
 
   setSelectedThreadId(threadId: string | undefined): void {
     if (threadId) {
-      // Validate that the thread exists
       const threadExists = this.threadsSubject.value.some(thread => thread.id === threadId);
       if (!threadExists) {
         console.warn(`Thread ${threadId} not found in threads list`);
@@ -299,25 +224,14 @@ export class ThreadsService {
     return getNextActiveThreadId(this.threadsSubject.value, currentThreadId);
   }
 
-  // Method to manually refresh threads
-  // async refreshThreads(): Promise<void> {
-  //   if (this.chatClient) {
-  //     await this.fetchThreads();
-  //   } else {
-  //   }
-  // }
-
-  // Method to update thread status (used when resolving chat)
   async updateThreadStatusExternal(threadId: string, status: ThreadItemStatus): Promise<void> {
     try {
-      // Update backend first
       if (status === ThreadItemStatus.RESOLVED) {
         await this.agentWorkItemService.updateAgentWorkItem(threadId, status);
       } else {
         await this.agentWorkItemService.createAgentWorkItem(threadId, status);
       }
       
-      // Then update local state
       this.updateThreadStatus(threadId, status);
       
     } catch (error) {

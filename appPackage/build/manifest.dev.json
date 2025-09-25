@@ -1,0 +1,50 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.17",
+    "version": "1.0.0",
+    "id": "c61e5c67-ec4f-4abb-98bd-cda2f97ffbd6",
+    "developer": {
+        "name": "Woodgrove App, Inc.",
+        "websiteUrl": "https://github.com/Azure-Samples/communication-services-messaging-teams-app?tab=readme-ov-file#b2c-customer-agent-messaging-teams-app",
+        "privacyUrl": "https://10.0.0.6/teams-agent-app/index.html#/privacy",
+        "termsOfUseUrl": "https://10.0.0.6/teams-agent-app/index.html#/termsofuse"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Support agent app",
+        "full": "Support agent app"
+    },
+    "description": {
+        "short": "Enables users to communicate with customers outside of the organization.",
+        "full": "Support agent app help users to manage their conversation with customers who are using an ACS identity. This app is a sample and is not intended for production use."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [],
+    "configurableTabs": [],
+    "staticTabs": [
+        {
+            "entityId": "index",
+            "name": "Home",
+            "contentUrl": "https://10.0.0.6/teams-agent-app/index.html#/tab",
+            "websiteUrl": "https://10.0.0.6/teams-agent-app/index.html#/tab",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "10.0.0.6/teams-agent-app"
+    ],
+    "webApplicationInfo": {
+        "id": "6c2c2c9e-f352-4b35-a6b3-b983a1ef1114",
+        "resource": "api://10.0.0.6/teams-agent-app/6c2c2c9e-f352-4b35-a6b3-b983a1ef1114"
+    }
+}

@@ -6,7 +6,6 @@ import { TeamsAuthService } from '../services/teams-auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private token = '';
 
   constructor(
     private teamsAuthService: TeamsAuthService
@@ -17,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe( 
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 && !this.token) {
+        if (error.status === 401) {
           return this.handleUnauthorized(request, next);
         }
         return throwError(() => error);
@@ -26,14 +25,10 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleUnauthorized(originalRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.token) {
-      return throwError(() => new Error('Authentication already in progress'));
-    }
-
     return from(this.teamsAuthService.openLoginDialog()).pipe(
       switchMap((tokenValue) => {
-        this.token = tokenValue;
-        if (this.token) {
+        localStorage.setItem('authToken', tokenValue)
+        if (tokenValue) {
           const retryRequest = this.addAuthHeaders(originalRequest);
           return next.handle(retryRequest);
         } else {
@@ -42,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       }),
       catchError((error) => {
-        this.token = ''; 
+        localStorage.setItem('authToken', '')
         return throwError(() => error);
       })
     );
@@ -50,8 +45,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private addAuthHeaders(request: HttpRequest<any>): HttpRequest<any> {
     const authHeaders: { [key: string]: string } = {};
-    if (this.token) {
-      authHeaders['token'] = `${this.token}`; // Note: a 'token' header is non-standard. The standard is 'Authorization' with 'Bearer'.
+    const authToken = localStorage.getItem('authToken');
+    if (authToken) {
+      authHeaders['token'] = `${authToken}`; 
     }
 
     if (Object.keys(authHeaders).length > 0) {

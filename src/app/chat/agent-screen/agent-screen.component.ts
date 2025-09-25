@@ -47,21 +47,23 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
       const userInfo = await this.teamsFxService.getUserInfo();
       if (!userInfo) {
         this.errorMessage = 'Failed to get Teams user info';
+        this.showErrorMessage(this.errorMessage);
         return;
       }
       
       const getSalesRepInfo = await this.agentService.getSalesRepInfo(userInfo.objectId);
       if (!getSalesRepInfo) {
         this.errorMessage = 'Failed to get sales rep info';
+        this.showErrorMessage(this.errorMessage);
         return;
       }
       const agentACSUser = await this.agentService.getAgentACSUser(userInfo.objectId);
       if (!agentACSUser) {
         this.errorMessage = 'Failed to link to ACS user';
+        this.showErrorMessage(this.errorMessage);
         return;
       }
-      // this.endpointUrl = await this.agentService.getEndpointUrl();
-      this.endpointUrl = 'https://teamspocbot.unitedstates.communication.azure.com';
+      this.endpointUrl = await this.agentService.getEndpointUrl();
       const tokenResponse = await this.agentService.getToken(agentACSUser.acsUserId);
       this.token = tokenResponse.token;
       this.userId = agentACSUser.acsUserId;
@@ -69,19 +71,10 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
       
       await this.threadsService.initializeChatClient(this.userId, this.token, this.endpointUrl);
     } catch (error) {
-      console.error('Failed to set screen state due to error: ', error);
       this.errorMessage = 'Failed to initialize screen';
+      this.showErrorMessage(this.errorMessage);
     }
   }
-  
-  // async refreshThreads() {
-  //   try {
-  //     await this.threadsService.refreshThreads();
-  //   } catch (error) {
-  //     console.error('Failed to refresh threads:', error);
-  //     this.showErrorMessage('Failed to refresh threads. Please try again.');
-  //   }
-  // }
   
   private showErrorMessage(message: string): void {
     const errorDiv = document.createElement('div');
@@ -102,7 +95,6 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
     
     document.body.appendChild(errorDiv);
     
-    // Remove after 3 seconds
     setTimeout(() => {
       if (errorDiv.parentNode) {
         errorDiv.parentNode.removeChild(errorDiv);
@@ -126,7 +118,6 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
     this.threadsService.resolvedThreadId$
       .pipe(takeUntil(this.destroy$))
       .subscribe(threadId => {
-        console.log('Resolved thread ID changed to:', threadId);
         this.resolvedThreadId = threadId;
       });
 
@@ -138,20 +129,15 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
   }
 
   setSelectedThreadId(threadId: string) {
-    console.log('Setting selected thread ID:', threadId);
     this.threadsService.setSelectedThreadId(threadId);
   }
 
   handleOnResolveChat(threadId: string) {
-    console.log('Resolving chat for thread:', threadId);
     
-    // Update thread status to resolved
     this.threadsService.updateThreadStatusExternal(threadId, ThreadItemStatus.RESOLVED);
     
-    // Get next active thread
     const nextActiveThreadId = this.threadsService.getNextActiveThreadIdFromService(threadId);
     if (nextActiveThreadId) {
-      console.log('Auto-selecting next active thread:', nextActiveThreadId);
       this.setSelectedThreadId(nextActiveThreadId);
     } else {
       console.log('No next active thread found');
@@ -159,34 +145,27 @@ export class AgentScreenComponent implements OnInit, OnDestroy {
   }
 
   handleOnViewThread(threadId: string) {
-    console.log('Viewing resolved thread:', threadId);
     this.setSelectedThreadId(threadId);
     
-    // Change tab to resolved if needed
     const thread = this.threads.find(t => t.id === threadId);
     if (thread && thread.status === ThreadItemStatus.RESOLVED) {
-      this.selectedTab = this.tabs[1]; // Resolved tab
+      this.selectedTab = this.tabs[1]; 
     }
     
-    // Clear resolved thread ID if it was this thread
     if (this.resolvedThreadId === threadId) {
       this.threadsService.setResolvedThreadId(undefined);
     }
   }
 
   handleOnStatusTabSelected(tabValue: string) {
-    console.log('Status tab selected:', tabValue);
     this.selectedTab = tabValue;
     
-    // Find first thread of selected status
     const status = tabValue.toLowerCase() as ThreadItemStatus;
     const firstThreadOfSelectedTab = this.threads.find(thread => thread.status === status);
     
     if (firstThreadOfSelectedTab) {
-      console.log('Selecting first chat of status:', status, firstThreadOfSelectedTab.id);
       this.setSelectedThreadId(firstThreadOfSelectedTab.id);
     } else {
-      console.log('No chat found for status:', status);
       this.selectedThreadId = undefined;
     }
   }

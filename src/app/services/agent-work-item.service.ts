@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ThreadItemStatus } from './threads.service';
 
 export interface AgentWorkItem {
@@ -20,7 +20,6 @@ export class AgentWorkItemService {
       return response || [];
     } catch (error) {
       console.error('Failed to get agent work items:', error);
-      // Fallback for development - you can remove this in production
       return [];
     }
   }

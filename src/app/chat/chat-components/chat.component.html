@@ -9,12 +9,16 @@
                 <div class="no-messages-icon">💬</div>
                 <div>No messages yet. Start the conversation!</div>
             </div>
-            <div *ngFor="let message of messages" class="message-item"
+            <div *ngFor="let message of messages; let i = index" class="message-item"
                 [ngClass]="{ 'own-message': message.sender === userId }">
+                <ng-container *ngIf="shouldShowHeader(i)">
+                    <div class="message-header">
+                        <span *ngIf="message?.senderDisplayName" class="message-sender">{{ message.senderDisplayName || 'Unknown' }}</span>
+                        <span class="message-time">{{ formatMessageTime(message.createdOn) }}</span>
+                    </div>
+                </ng-container>
                 <div class="message-content">
-                    <div class="message-sender">{{ message.senderDisplayName || 'Unknown' }}</div>
                     <div class="message-text" [innerHTML]="message.content"></div>
-                    <div class="message-time">{{ formatMessageTime(message.createdOn) }}</div>
                 </div>
             </div>
         </div>

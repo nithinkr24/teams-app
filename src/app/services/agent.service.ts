@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { apiEndpoints } from '../utils/constants';
-
 
 @Injectable({
   providedIn: 'root'
